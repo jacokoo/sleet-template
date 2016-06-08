@@ -1,4 +1,4 @@
-import * as a from './context-overload';
+import './context-overload';
 
 import { Segment } from './compiler/segment';
 import { TemplateTagCompiler } from './compiler/tag';
