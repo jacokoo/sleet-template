@@ -1,0 +1,16 @@
+#! template
+
+foo > bar
+a(a=1+a)
+    yes
+        hello
+        echo('a')
+        if(a)
+            b
+            c
+                if(b)
+                    e
+        else
+            f > g
+        if
+            d
