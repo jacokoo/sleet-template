@@ -1,16 +1,11 @@
 #! template
 
-foo > bar
-a(a=1+a)
-    yes
-        hello
-        echo('a')
-        if(a)
-            b
-            c
-                if(b)
-                    e
+a(class=a)
+    ul
+        each(items)
+            li(id=id) > echo(name) + eq(id 1)  selected
         else
-            f > g
-        if
-            d
+            p no items
+
+    with(b)
+        echo('hello' name true 1)
