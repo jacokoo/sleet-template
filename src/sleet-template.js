@@ -5,31 +5,54 @@ import { TemplateTagCompiler } from './compiler/tag';
 import { BlockTagCompiler } from './compiler/block-tag';
 import { ElseTagCompiler } from './compiler/else-tag';
 import { ValueIdentifierCompiler } from './compiler/value-identifier';
+
 import { ValueHelperCompiler } from './compiler/value-helper';
 
-function generateOutput(segments) {
-    console.log(segments);
+const PATH = 'sleet-template/lib/runtime';
+
+function generateOutput (segments) {
     const result =
-`
-;(function(){var t={${segments.map(e => `${e.index}:${e.getOutput()}`).join(',')}},
-r=require('./runtime/runtime'),m = {},S = function(i, o) {return r.handle(t, m, i, o);},
+`var t={${segments.map(e => `${e.index}:${e.getOutput()}`).join(',')}},
+m = {},S = function(i, o) {return R.handle(t, m, i, o);},
 T = function(object) {return t[0].text({stack: [object]})};
-T.update = function() {console.log('hello');};return T;
-})();`;
-    console.log(eval(result)({a: 1, b: {name: 'bbbb'}, items: [{id: 1, name: 'item1'}, {id: 2, name: 'item2'}]}));
+T.update = function() {console.log('hello');};`;
     return result;
 }
 
+function wrapCommonJs (str, path) {
+    return `var R=require('${path}');
+${str}
+module.exports=T;`;
+}
+
+function wrapAmd (str, path) {
+    return `define(['${path}'], function(R) {
+    ${str}
+    return T;
+})`;
+}
+
+function wrapFunction (str) {
+    return new Function('R', `${str}return T;`); // eslint-disable-line no-new-func
+}
+
+export const style = 'function';
+
 export function getDefaultExtension () { return 'js'; }
 
-export function overrideContext (context, options, declaration) {
-    context.startSegment(Segment.TYPE_ROOT);
+export function overrideContext (context, options) {
+    const tpl = options.template || {};
+    const path = tpl.runtimePath || PATH;
+    let method = wrapCommonJs;
+    if (tpl.style === 'function') method = wrapFunction;
+    else if (tpl.style === 'amd') method = wrapAmd;
 
-    const oldGetOutput = context.getOutput;
+    context.startSegment(Segment.TYPE_ROOT);
     Object.assign(context, {
-        getOutput: function(noJoin) {
+        getOutput () {
             this.endSegment();
-            return generateOutput(this.segments);
+            const result = generateOutput(this.segments);
+            return method(result, path);
         }
     });
 

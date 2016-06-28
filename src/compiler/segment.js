@@ -1,25 +1,25 @@
 import { Attribute } from 'sleet/lib/ast/attribute';
 
-function appendObj(obj, key) {
+function appendObj (obj, key) {
     if (!obj) return '';
     let s = '';
 
     s += `${key}:{`;
     Object.keys(obj).forEach(k => s += `${k}:${obj[k]},`);
     s = s.slice(0, -1);
-    s += `},`
+    s += '},';
     return s;
 }
 
-function appendString(str, key) {
+function appendString (str, key) {
     if (!str) return '';
     return `${key}:'${str}',`;
 }
 
-function append(item, key, noComma) {
+function append (item, key, noComma) {
     if (!item) return '';
     const result = `${key}:${item}`;
-    return noComma ? result : result + ','
+    return noComma ? result : `${result},`;
 }
 
 export class Segment {
@@ -96,7 +96,7 @@ export class Segment {
         if (this.text) {
             result += `,text:function(o){return ${this.text};}`;
         }
-        return result + '}';
+        return `${result}}`;
     }
 }
 

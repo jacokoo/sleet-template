@@ -1,6 +1,5 @@
 import { TemplateTagCompiler } from './tag';
 import { Segment } from './segment';
-import { Attribute } from 'sleet/lib/ast/attribute';
 
 export class BlockTagCompiler extends TemplateTagCompiler {
     compile (context, tag) {
@@ -12,6 +11,7 @@ export class BlockTagCompiler extends TemplateTagCompiler {
         this.content(context, tag);
         context.endSegment();
 
-        context.parent.containsIndent = true;
+        context.parent.containsIndent = true;   // eslint-disable-line no-param-reassign
+        context.containsIndent = true; // eslint-disable-line no-param-reassign
     }
 }

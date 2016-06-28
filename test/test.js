@@ -8,12 +8,12 @@ const template = require('../lib/sleet-template');
 
 const base = path.resolve('test');
 
-function compileIt(input) {
+function compileIt (input) {
     const content = fs.readFileSync(input, 'utf8');
-    return compile(content, {filename: input, template});
+    return compile(content, { filename: input, template });
 }
 
-function executeFile(dir, file) {
+function executeFile (dir, file) {
     const name = path.basename(file, path.extname(file));
     const expectedName = `${name}-expected.html`;
 
@@ -22,13 +22,14 @@ function executeFile(dir, file) {
         // const expected = fs.readFileSync(path.join(dir, expectedName), 'utf8');
 
         // expect(compiled.content).to.equal(expected);
-        console.log(compiled.content);
+        const fn = compiled.content;
+        console.log(fn(require('../lib/runtime'))({a: 1}));
         expect(compiled.content).to.not.be.null;
     });
 }
 
-function walkFolder(folder) {
-    let folderPath = path.resolve(folder);
+function walkFolder (folder) {
+    const folderPath = path.resolve(folder);
     const name = path.relative(base, folderPath);
 
     describe(name, () => {

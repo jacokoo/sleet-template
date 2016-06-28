@@ -1,15 +1,15 @@
-import * as H from './handler';
+import * as H from './runtime/handler';
 
 const handlers = {
 };
 
 export function registerHandler (handler) {
     handler.supportedTypes().forEach(t => handlers[`${handler.name()}${t}`] = handler);
-};
+}
 
 function findHandler (segment) {
     return handlers[`${segment.n}${segment.t}`];
-};
+}
 
 registerHandler(new H.IfBlockHandler());
 registerHandler(new H.UnlessBlockHandler());
@@ -36,14 +36,14 @@ export function handle (template, memo, index, options) {
     obj.b && Object.keys(obj.b).forEach(k => args[+k] = context[obj.b[k]]);
     obj.s && Object.keys(obj.s).forEach(k => args[+k] = obj.s[k]);
     args.unshift({
-        fn: function(ctx) {
+        fn (ctx) {
             if (!obj.text) return '';
             if (ctx) options.stack.push(ctx);
             const result = obj.text(options);
             if (ctx) options.stack.pop();
             return result;
         },
-        reverse: function(ctx) {
+        reverse (ctx) {
             if (!obj.e || !template[obj.e].text) return '';
             if (ctx) options.stack.push(ctx);
             const result = template[obj.e].text(options);
@@ -53,4 +53,4 @@ export function handle (template, memo, index, options) {
         hash: obj.hashes
     });
     return handler.handle(...args);
-};
+}

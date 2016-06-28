@@ -6,7 +6,7 @@ const chars = {
     "'": '&#x27;',
     '`': '&#x60;',
     '=': '&#x3D;'
-}
+};
 
 export class Handler {
     constructor (name, ...types) {
@@ -27,7 +27,7 @@ Object.assign(Handler, {
 });
 
 export class EscapeableHandler extends Handler {
-    constructor(name, escape, ...types) {
+    constructor (name, escape, ...types) {
         super(name, ...types);
         this._escape = escape !== false;
     }
@@ -68,7 +68,6 @@ export class EachHandler extends Handler {
 export class WithHandler extends Handler {
     constructor () { super('with', Handler.TYPE_BLOCK); }
     handle (options, item) {
-        console.log(options, item);
         return item ? options.fn(item) : options.reverse();
     }
 }

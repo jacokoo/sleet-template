@@ -9,3 +9,4 @@ a(class=a)
 
     with(b)
         echo('hello' name true 1)
+    if(a) > echo('a') < else b
